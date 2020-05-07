@@ -2,7 +2,7 @@ parameters:
 
 database:
 	dsn: 'mysql:host=127.0.0.1;dbname=clevercms'
-	user: root
-	password: 
+	user: "username"
+	password: "password"
 	options: 
 		lazy: yes
