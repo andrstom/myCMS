@@ -1,0 +1,48 @@
+{block content}
+
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Přehled organizací</h2>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                
+                <table width="100%" class="table">
+                    <thead>
+                        <tr>
+                            <th>Krátký název</th>
+                            <th>Upravit</th>
+                            <th>Odstranit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {if !isset($organisations->fetch()->short_name)}
+                            <tr>
+                                <td colspan="5"><center>žádná organizace</center></td>
+                            </tr>
+                        {else}
+                            {foreach $organisations as $organisation}
+                                <tr>
+                                    <td>{$organisation->short_name}</td>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <td><a n:href="Organisation:edit $organisation->id" class="btn btn-info"><i class="ion-edit"></i></a></td>
+                                            <td><a n:href="Organisation:delete $organisation->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?\n\nSoučasně bude odstraněno i logo a další související informace!');"><i class="ion-trash-a"></i></a></td>
+                                        {/if}
+                                    {/if}
+                                </tr>
+                            {/foreach}
+                        {/if}
+                    </tbody>
+                    <tfooter>
+                        <tr><td colspan="4"><center><a n:href="Organisation:add" class="btn btn-primary">Přidat organizaci</a></center></td></tr>
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,254 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit organizaci <b>{$organisation->short_name}</b> <img src={$basePath . $organisation->logo} alt=" " width="75"/></h2>
+            <hr>
+            <a n:href="Organisation:default" class="btn btn-outline-success">Zpět na přehled organizací</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>* povinná pole</p>
+                {form organisationForm}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            {label short_name}{input short_name}<br>
+                            {label name}{input name}<br>
+                            {foreach $form->getComponents() as $sid => $cntrl}
+                                {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                    {foreach $cntrl->getControls() as $key => $c}
+                                        {label $c /}{input $c}
+                                    {/foreach}
+                                {/if}
+                            {/foreach}<br>
+                            {label sponsors}{input sponsors}
+                        </div>
+                        <br>
+                        <div class="col-lg-3">
+                            {label email}{input email}<br>
+                            {label phone}{input phone}<br>
+                            {label gsm}{input gsm}<br>
+                            {label clients}{input clients}
+                        </div>
+                        <br>
+                        <div class="col-lg-3">
+                            {label street}{input street}<br>
+                            {label city}{input city}<br>
+                            {label postal}{input postal}
+                        </div>
+                        <br>
+                        <div class="col-lg-2">
+                            {label ico}{input ico}<br>
+                            {label dic}{input dic}<br>
+                            {label account}{input account}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {label send}{input send}
+                        </div>
+                    </div>
+
+                {/form}
+                
+            </div>
+        </div>
+        <hr>
+    </div>
+    <br>
+    <div class="container">
+        <header class="section-header">
+            <h2>Team</h2>
+        </header>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row about-cols">
+                    {foreach $organisation->related('organisation_employees') as $employee}
+                        <div class="col-md-3">
+                            <div class="about-col text-center">
+                                <div class="img">
+                                    <img src="{$basePath}{$employee->image}" alt="{$employee->image}" class="img-fluid">
+                                    <div class="icon"><i class="fa fa-address-card-o"></i></div>
+                                </div>
+                                <h2 class="title">{$employee->lastname . ' ' . $employee->firstname}</h2>
+                                <p>{$employee->position}</p>
+                                <p>{$employee->email}</p>
+                                <p>{$employee->gsm}</p>
+                                <hr>
+                                <p>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <a n:href="Employees:edit $organisation->id, $employee->id" class="btn btn-info"><i class="ion-edit"></i></a>
+                                            <a n:href="Employees:delete $employee->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                        {/if}
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+                    {/foreach}
+
+                    {if $user->isInRole('Admin')}
+
+                        <div class="col-md-4">
+                            <div class="about-col">
+                                <div class="img">
+                                    <center><i class="fa fa-plus-circle fa-5x" style="color: #FFB31B; padding: 30px 0 30px 0"></i></center>
+                                </div>
+                                <br>
+                                <h3 class="text-center">Nový parťák</h3>
+                                {form employeesForm}
+                                    <ul class="errors" n:if="$form->hasErrors()">
+                                        <li n:foreach="$form->errors as $error">{$error}</li>
+                                    </ul>
+                                    <p>{label firstname /}{input firstname}</p>
+                                    <p>{label lastname /}{input lastname}</p>
+                                    <p>{label position /}{input position}</p>
+                                    <p>{label email /}{input email}</p>
+                                    <p>{label gsm /}{input gsm}</p>
+                                    {foreach $form->getComponents() as $sid => $cntrl}
+                                        {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                            {foreach $cntrl->getControls() as $key => $c}
+                                                <p>{label $c /}{input $c}</p>
+                                            {/foreach}
+                                        {/if}
+                                    {/foreach}
+                                    <p>{input send}</p>
+                                {/form}
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="sponsors">
+        <header class="section-header">
+            <h2>Sponzoři</h2>
+        </header>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row about-cols">
+                    {foreach $organisation->related('organisation_sponsors') as $sponsor}
+                        <div class="col-md-3">
+                            <div class="about-col text-center">
+                                <div class="img">
+                                    <img src="{$basePath . $sponsor->image_url}" alt="{$sponsor->name}" class="img-fluid">
+                                </div>
+                                <h2 class="title">{$sponsor->name}</h2>
+                                <p>{$sponsor->link}</p>
+                                <hr>
+                                <p>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <a n:href="Organisation:editSponsor $organisation->id, $sponsor->id" class="btn btn-info"><i class="ion-edit"></i></a>
+                                            <a n:href="Organisation:deleteSponsor $sponsor->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                        {/if}
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+                    {/foreach}
+                    
+                    {if $user->isLoggedIn()}
+                        {if $user->isInRole('Admin')}
+                            <div class="col-md-4">
+                                <div class="about-col">
+                                    <div class="img">
+                                        <center><i class="fa fa-plus-circle fa-5x" style="color: #FFB31B; padding: 30px 0 30px 0"></i></center>
+                                    </div>
+                                    <br>
+                                    <h3 class="text-center">Nový sponzor</h3>
+                                    {form sponsorsForm}
+                                        <ul class="errors" n:if="$form->hasErrors()">
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                        <p>{label name /}{input name}</p>
+                                        <p>{label link /}{input link}</p>
+                                        {foreach $form->getComponents() as $sid => $cntrl}
+                                            {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                                {foreach $cntrl->getControls() as $key => $c}
+                                                    <p>{label $c /}{input $c}</p>
+                                                {/foreach}
+                                            {/if}
+                                        {/foreach}
+                                        <p>{input send}</p>
+                                    {/form}
+                                </div>
+                            </div>
+                        {/if}
+                    {/if}
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="clients">
+        <header class="section-header">
+            <h2>Klienti</h2>
+        </header>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row about-cols">
+                    {foreach $organisation->related('organisation_clients') as $client}
+                        <div class="col-md-3">
+                            <div class="about-col text-center">
+                                <div class="img">
+                                    <img src="{$basePath . $client->image_url}" alt="{$client->name}" class="img-fluid">
+                                </div>
+                                <h2 class="title">{$client->name}</h2>
+                                <p>{$client->link}</p>
+                                <hr>
+                                <p>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <a n:href="Organisation:editClient $organisation->id, $client->id" class="btn btn-info"><i class="ion-edit"></i></a>
+                                            <a n:href="Organisation:deleteClient $client->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                        {/if}
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+                    {/foreach}
+                    
+                    {if $user->isLoggedIn()}
+                        {if $user->isInRole('Admin')}
+                            <div class="col-md-4">
+                                <div class="about-col">
+                                    <div class="img">
+                                        <center><i class="fa fa-plus-circle fa-5x" style="color: #FFB31B; padding: 30px 0 30px 0"></i></center>
+                                    </div>
+                                    <br>
+                                    <h3 class="text-center">Nový klient</h3>
+                                    {form clientsForm}
+                                        <ul class="errors" n:if="$form->hasErrors()">
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                        <p>{label name /}{input name}</p>
+                                        <p>{label link /}{input link}</p>
+                                        {foreach $form->getComponents() as $sid => $cntrl}
+                                            {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                                {foreach $cntrl->getControls() as $key => $c}
+                                                    <p>{label $c /}{input $c}</p>
+                                                {/foreach}
+                                            {/if}
+                                        {/foreach}
+                                        <p>{input send}</p>
+                                    {/form}
+                                </div>
+                            </div>
+                        {/if}
+                    {/if}
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</section>

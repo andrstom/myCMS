@@ -1,0 +1,43 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit detail <b>{$organisationDetail->title}</b></h2>
+            <hr>
+            <a n:href="Organisation:default" class="btn btn-outline-success">Zpět na přehled organizací</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>* povinná pole</p>
+                <div class="row about-cols">
+                    <div class="col-md-5">
+                        <div class="about-col">
+                            <div class="img">
+                                <img src="{$basePath . $organisationDetail->image}" alt="{$organisationDetail->image}" class="img-fluid">
+                            </div>
+                            <br>
+                            {form organisationDetailForm}
+                                <ul class="errors" n:if="$form->hasErrors()">
+                                    <li n:foreach="$form->errors as $error">{$error}</li>
+                                </ul>
+                                <p>{label title /}{input title}</p>
+                                <p>{label content /}{input content}</p>
+                                {foreach $form->getComponents() as $sid => $cntrl}
+                                    {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                        {foreach $cntrl->getControls() as $key => $c}
+                                            <p>{label $c /}{input $c}</p>
+                                        {/foreach}
+                                    {/if}
+                                {/foreach}
+                                <hr>
+                                <p>{input send}</p>
+                            {/form}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</section>

@@ -1,0 +1,116 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit oddíl: <b>{$section->section_title}</b></h2>
+            <hr>
+            <a n:href="Content:default" class="btn btn-outline-success">Zpět na Oddíly</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>* povinná pole</p>
+                {form sectionForm}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {label section_title}{input section_title}<br>
+                            {label section_content}{input section_content}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {label section_priority}{input section_priority}<br>
+                            {label section_type}{input section_type}<br>
+                            {label section_width}{input section_width}<br>
+                        </div>
+                        <br>
+                        <div class="col-lg-6">
+                            {label section_columns}{input section_columns}<br>
+                            {foreach $form->getComponents() as $sid => $cntrl}
+                                {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                    {foreach $cntrl->getControls() as $key => $c}
+                                        {label $c /} <img src="{$basePath . $section->section_image}" alt=" " width="50px" /> {if $section->section_image}<a n:href="Content:deleteSectionLogo $section->id" class="btn btn-danger">Smazat obrázek</a>{/if} {input $c}
+                                    {/foreach}
+                                {/if}
+                            {/foreach}
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {label send}{input send}
+                        </div>
+                    </div>
+                {/form}
+            </div>
+        </div>
+        <hr>
+    </div>
+    <br>
+    <div class="container">
+        <header class="section-header">
+            <h2>Detaily</h2>
+        </header>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row about-cols">
+                    {foreach $section->related('sections_details') as $detail}
+                        <div class="col-md-4">
+                            <div class="about-col">
+                                <div class="img">
+                                    <img src="{$basePath . $detail->detail_image}" alt="{$detail->detail_image}" class="img-fluid">
+                                    <div class="icon"><i class="ion-ios-paw"></i></div>
+                                </div>
+                                <h2>{$detail->detail_title}</h2>
+                                <p>{$detail->detail_content|noescape}</p>
+                                <hr>
+                                <p class="text-center">
+                                    {if $user->isInRole('Admin')}
+                                        <a n:href="Content:editDetail $section->id, $detail->id" class="btn btn-info"><i class="ion-edit"></i></a>
+                                        <a n:href="Content:deleteDetail $section->id, $detail->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+                    {/foreach}
+
+                    {if $user->isInRole('Admin')}
+
+                        <div class="col-md-12">
+                            <div class="about-col">
+                                <div class="img">
+                                    <center><i class="fa fa-plus-circle fa-5x" style="color: #FFB31B; padding: 30px 0 30px 0"></i></center>
+                                </div>
+                                <br>
+                                <h3 class="text-center">Nový detail</h3>
+                                
+                                {form sectionDetailForm}
+                                    <ul class="errors" n:if="$form->hasErrors()">
+                                        <li n:foreach="$form->errors as $error">{$error}</li>
+                                    </ul>
+                                    <p>{label detail_title /}{input detail_title}</p>
+                                    <p>{label detail_content /}{input detail_content}</p>
+                                    {foreach $form->getComponents() as $sid => $cntrl}
+                                        {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                            {foreach $cntrl->getControls() as $key => $c}
+                                                <p>{label $c /}{input $c}</p>
+                                            {/foreach}
+                                        {/if}
+                                    {/foreach}
+                                    <hr>
+                                    <p>{input send}</p>
+                                {/form}
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+    
+</section>

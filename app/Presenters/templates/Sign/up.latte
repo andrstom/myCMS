@@ -1,0 +1,17 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Registrace nového uživatele</h2>
+            <a n:href="Sign:in">Pokud již máte registraci, přihlaste se zde.</a>
+            <hr>
+            <input type="button" value="Zpět" class="btn btn-outline-success" onclick="history.back()">
+        </header>
+        <br>
+        <div class="row about-cols">
+            <div class="col-md-6">
+                {include bootstrap-form signUpForm}
+            </div>
+        </div>
+    </div>
+</section>

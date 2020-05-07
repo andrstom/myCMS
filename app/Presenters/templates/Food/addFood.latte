@@ -1,0 +1,100 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Přidat denní nabídku</h2>
+            <hr>
+            <a n:href="Food:default" class="btn btn-outline-success">Zpět na jídelníček</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                {form foodForm}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div n:multiplier="formFoods">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h2>Datum</h2>
+                                <p>{input day}</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <h3>Snídaně</h3>
+                                <p>{input breakfast}</p>
+                                <p>{input breakfast_alergens}</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <h3>Polévka</h3>
+                                <p>{input soup}</p>
+                                <p>{input soup_alergens}</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <h3>Hlavní chod</h3>
+                                <p>{input main_course}</p>
+                                <p>{input main_course_alergens}</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <h3>Svačinka</h3>
+                                <p>{input snack}</p>
+                                <p>{input snack_alergens}</p>
+                            </div>
+                        </div>
+                        <p>{btnRemove 'class' => 'btn btn-danger col-lg-12'}</p>
+                        <hr>
+                    </div>
+                    <p>{btnCreate formFoods 'class' => 'btn btn-warning'} | 
+                        {btnCreate $form[formFoods]:4 'class' => 'btn btn-warning'}</p>
+                    <p class="col-lg-12">{input send}</p>
+
+                {/form}
+                
+                
+                
+                
+                
+                {*form foodForm}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr><th>Datum</th><th>Snídaně</th><th>Polévka</th><th>Hlavní chod</th><th>Svačinka</th><th></th></tr>
+                            </thead>
+                            <tbody n:multiplier="formFoods">
+                                <tr>
+                                    <td>{input day}</td>
+                                    <td>{input breakfast}</td>
+                                    <td>{input soup}</td>
+                                    <td>{input main_course}</td>
+                                    <td>{input snack}</td>
+                                    <td>{btnRemove 'class' => 'btn btn-danger'}</td>
+                                </tr>
+                                <tr style="font-size: 0.8em">
+                                    <td></td>
+                                    <td>{input breakfast_alergens}</td>
+                                    <td>{input soup_alergens}</td>
+                                    <td>{input main_course_alergens}</td>
+                                    <td>{input snack_alergens}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                            <tfooter>
+                                <tr>
+                                    <td colspan="6">
+                                        <p>{btnCreate formFoods 'class' => 'btn btn-warning'} | 
+                                        {btnCreate $form[formFoods]:4 'class' => 'btn btn-warning'}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <caption>{input send}</caption>
+                                </tr>
+                            </tfooter>
+                        </table>
+                    </div>
+                {/form*}
+            </div>
+        </div>
+    </div>
+</section>

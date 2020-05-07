@@ -1,0 +1,52 @@
+{block content}
+<section id="news">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Článek</h2>
+            <hr>
+            <a n:href=Homepage:default  class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="col-md-12">
+            <div class="news-col">
+                <div class="img">
+                    {ifset $article->related('articles_gallery')->fetch()->gallery->url}
+                        <center><img src={$basePath . $article->related('articles_gallery')->fetch()->gallery->url} alt={$article->related('articles_gallery')->fetch()->gallery->name} class="img-fluid"></center>
+                    {else}
+                        <center><img src="{$basePath . $organisation->logo}" width="40%" alt="logo" class="img-fluid"></center>
+                    {/ifset}
+                    <div class="icon"><i class="ion-pin"></i></div>
+                </div>
+                <br>
+                <h2 class="title">{$article->title}</h2>
+                <p><center><small>Napsal: {$article->creator} ({$article->created_at|date:'d.m.Y'})</small></center></p>
+                <p class="text-center">
+                    {if $user->loggedIn}
+                        {if $user->isInRole('Admin')}
+                            <a n:href="Articles:editArticle $article->id" class="btn btn-outline-info">Upravit</a>
+                            <a n:href="Articles:deleteArticle $article->id" class="btn btn-outline-danger" onclick="return confirm('Opravdu smazat?\n\nSouvysející obrázky budou zachovány!');">Smazat</a>
+                        {/if}
+                    {/if}
+                </p>
+                <p>{$article->content|noescape}</p>
+                <br>
+                <div class="container">
+                    <div class="row portfolio-container">
+                        {foreach $article->related('articles_gallery') as $image}
+                            <div class="col-lg-2 col-md-4 portfolio-item">
+                                <div class="portfolio-wrap">
+                                    <figure>
+                                        <a href={$basePath . $image->gallery->url_thumb} data-lightbox="portfolio" data-title={$image->gallery->name} class="link-preview" title="Preview">
+                                            <img src={$basePath . $image->gallery->url} alt={$image->gallery->name} class="img-fluid">
+                                        </a>
+                                    </figure>
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

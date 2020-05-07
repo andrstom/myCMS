@@ -1,0 +1,46 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Přidat článek</h2>
+            <hr>
+            <a n:href=Homepage:default class="btn btn-outline-primary">Domů</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                {form articlesForm}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    {label title}{input title}
+                    {label content}{input content}
+                    <br>
+                    <table class="table-responsive" border="0">
+                        <thead>
+                            <tr>
+                                <th>Fotky a obrázky</th>
+                                <th>Album</th>
+                                <th>Popis fotky / obrázku</th>
+                            </tr>
+                        </thead>
+                        <tbody n:multiplier="formImages">
+                            <tr>
+                                <td>{input image}</td>
+                                <td>{input album_id}</td>
+                                <td>{input description}</td>
+                                <td>{btnRemove 'class' => 'btn btn-danger'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    {btnCreate formImages 'class' => 'btn btn-warning'} | 
+                    {btnCreate $form[formImages]:5 'class' => 'btn btn-warning'}
+                    <br><br>
+                    <hr>
+                    {input send}
+                {/form}
+            </div>
+        </div>
+    </div>
+</section>

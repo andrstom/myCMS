@@ -1,0 +1,39 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit sponzora <b>{$sponsor->name}</b> <img src={$basePath . $sponsor->image_url} width="75"/></h2>
+            <hr>
+            <a n:href="Organisation:default" class="btn btn-outline-success">Zpět na přehled organizací</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>* povinná pole</p>
+                <div class="row about-cols">
+                    <div class="col-md-6">
+                        <div class="about-col">
+                            {form sponsorsForm}
+                                <ul class="errors" n:if="$form->hasErrors()">
+                                    <li n:foreach="$form->errors as $error">{$error}</li>
+                                </ul>
+                                <p>{label name /}{input name}</p>
+                                <p>{label link /}{input link}</p>
+                                {foreach $form->getComponents() as $sid => $cntrl}
+                                    {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                        {foreach $cntrl->getControls() as $key => $c}
+                                            <p>{label $c /}{input $c}</p>
+                                        {/foreach}
+                                    {/if}
+                                {/foreach}
+                                <hr>
+                                <p>{input send}</p>
+                            {/form}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</section>

@@ -1,0 +1,162 @@
+{**
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+ *}
+
+{import 'components/form.latte'}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    
+    <meta charset="utf-8">
+    <title>{ifset title}{include title|stripHtml} | {/ifset}Mateřská školka Val</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="{$basePath}/favicon.png" rel="icon">
+    <link href="{$basePath}/favicon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="{$basePath}/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="{$basePath}/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="{$basePath}/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="{$basePath}/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="{$basePath}/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="{$basePath}/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="{$basePath}/css/style.css" rel="stylesheet">
+    <!-- =======================================================
+      Theme Name: BizPage
+      Theme URL: https://bootstrapmade.com/bizpage-bootstrap-business-template/
+      Author: BootstrapMade.com
+      License: https://bootstrapmade.com/license/
+    =============================================================-->
+    
+    <script src="{$basePath}/lib/jquery/jquery.min.js"></script>
+    
+    <!-- Nette js -->
+    <script src="{$basePath}/js/nette.ajax.js"></script>
+    <script src="{$basePath}/js/netteForms.js"></script>
+    
+    <script src="{$basePath}/lib/tinymce/tinymce.min.js"></script>
+    
+    <!-- Datatables -->
+    <link href="{$basePath}/lib/data-tables-1.10.2/media/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <script src="{$basePath}/lib/data-tables-1.10.2/media/js/jquery.dataTables.min.js"></script>
+    <script src="{$basePath}/lib/data-tables-1.10.2/media/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{$basePath}/lib/data-tables-1.10.2/media/js/table-nastaveni.js"></script>
+</head>
+
+<body>
+    
+    <script>
+    tinymce.init({
+        selector: 'textarea',
+        language: 'cs_CZ',
+        plugins: 'a11ychecker advcode casechange formatpainter linkchecker lists checklist pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker emoticons image link wordcount',
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | emoticons | image | link | wordcount',
+        toolbar_drawer: 'floating',
+        insertdatetime_formats: ["%H:%M:%S", "%d.%m.%Y"]
+    });
+    </script>
+    
+    <!--==========================
+    Header
+    ============================-->
+    <header id="header">
+        <div class="container-fluid">
+
+            <div id="logo" class="pull-left" style="color: #fff">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <img src="{$basePath}/organisations/1/main_logo.png" width="40px" alt="logo" title="logo" />
+                cleverCMS
+            </div>
+
+            <nav id="nav-menu-container">
+                <ul class="nav-menu">
+                    <li><a n:href="Homepage:default" class="scroll menu-active">Hlavní stránka</a></li>
+                    <li><a n:href="Homepage:default#about">O nás</a></li>
+                    <li><a n:href="Homepage:default#team">Team</a></li>
+                    <!--<li><a n:href="Download:default#">Ke stažení</a></li>-->
+                    <li><a n:href="Homepage:default#portfolio">Fotogalerie</a></li>
+                    <li><a n:href="Food:default">Jídelníček</a></li>
+                    <li><a n:href="Homepage:default#contact">Kontakt</a></li>
+                    {if $user->isLoggedIn()}
+                        <li class="menu-has-children">
+                            <a href="#">Nastavení</a>
+                            <ul>
+                                <li><a n:href="Sign:edit $user->getIdentity()->id"><i class="fa fa-user-o"></i> {$user->getIdentity()->email}</a></li>
+                                {if $user->isInRole('Admin')}
+                                    <li><a n:href="Articles:default">Aktuality</a></li>
+                                    <li><a n:href="Gallery:default">Fotogalerie</a></li>
+                                    <li><a n:href="Organisation:default">Organizace</a></li>
+                                    <li><a n:href="Content:default">Obsah webu</a></li>
+                                    <li><a n:href="Sign:default">Uživatelé</a></li>
+                                {/if}
+                                <li><a n:href="Sign:out">Odhlásit</a></li>
+                            </ul>
+                        </li>
+                    {/if}
+                    
+                </ul>
+            </nav><!-- #nav-menu-container -->
+        </div>
+    </header><!-- #header -->
+
+    <!-- #main section-->
+    <main id="main">
+        <div class="container">
+            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type"><br>{$flash->message}</div>
+        </div>
+        
+        <!-- include content -->
+        {include content}
+        <footer id="footer">
+        <div class="container">
+            <div class="copyright">
+                <p><i>cleverCMS | &copy; 2020 |
+                    {if $user->isLoggedIn()}
+                        {if $user->isInRole('Admin')}
+                            <a n:href="Sign:out">Odhlásit</a>
+                        {/if}
+                    {else}
+                        <a n:href="Sign:in">Administrace</a>
+                        <!--<li><a n:href="Sign:up">Registrovat</a></li>-->
+                    {/if}
+                </i></p>
+                Thanx to &copy;<strong>BizPage</strong>. All Rights Reserved | Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+        </footer>
+    </main>
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+    {block scripts}
+    
+      <!-- JavaScript Libraries -->
+    <script src="{$basePath}/lib/jquery/jquery-migrate.min.js"></script>
+    <script src="{$basePath}/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{$basePath}/lib/easing/easing.min.js"></script>
+    <script src="{$basePath}/lib/superfish/hoverIntent.js"></script>
+    <script src="{$basePath}/lib/superfish/superfish.min.js"></script>
+    <script src="{$basePath}/lib/wow/wow.min.js"></script>
+    <script src="{$basePath}/lib/waypoints/waypoints.min.js"></script>
+    <script src="{$basePath}/lib/counterup/counterup.min.js"></script>
+    <script src="{$basePath}/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="{$basePath}/lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="{$basePath}/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="{$basePath}/lib/touchSwipe/jquery.touchSwipe.min.js"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="{$basePath}/js/main.js"></script>
+    {/block}
+</body>
+</html>

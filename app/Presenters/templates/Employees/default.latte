@@ -1,0 +1,53 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Přehled parťáků</h2>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>|
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                
+                <table width="100%" class="table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Příjmení</th>
+                            <th>Jméno</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Pozice</th>
+                            <th>Organizace</th>
+                            <th>Upravit</th>
+                            <th>Odstranit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {if !isset($employees->fetch()->firstname)}
+                            <tr>
+                                <td colspan="9"><center>Nemáte žádného parťáka.</center></td>
+                            </tr>
+                        {else}
+                            {foreach $employees as $employee}
+                                <tr>
+                                    <td><img src="{$basePath . $employee->image}" alt="{$employee->lastname .' '.$employee->firstname}" width="40px"></td>
+                                    <td>{$employee->lastname}</td>
+                                    <td>{$employee->firstname}</td>
+                                    <td>{$employee->email}</td>
+                                    <td>{$employee->gsm}</td>
+                                    <td>{$employee->position}</td>
+                                    <td>{$employee->ref('organisation')->short_name}</td>
+                                    {if $user->isInRole('Admin')}
+                                        <td><a n:href="Employees:delete $employee->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a></td>
+                                    {/if}
+                                </tr>
+                            {/foreach}
+                        {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

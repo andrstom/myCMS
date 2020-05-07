@@ -1,0 +1,70 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Uživatelé</h2>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                
+                <table width="100%" class="table">
+                    <thead>
+                        <tr>
+                            <th>Příjmení</th>
+                            <th>Jméno</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Aktivní</th>
+                            <th>Upravit</th>
+                            <th>Odstranit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {if !isset($webusers->fetch()->lastname)}
+                            <tr>
+                                <td colspan="6"><center>žádný uživatel</center></td>
+                            </tr>
+                        {else}
+                            {if $user->isLoggedIn()}
+                                {if $user->isInRole('Admin')}
+                                    {foreach $webusers as $webuser}
+                                        <tr>
+                                            <td>{$webuser->lastname}</td>
+                                            <td>{$webuser->firstname}</td>
+                                            <td>{$webuser->email}</td>
+                                            <td>{$webuser->role}</td>
+                                            <td>{$webuser->active}</td>
+                                            <td><a n:href="Sign:edit $webuser->id" class="btn btn-info"><i class="ion-edit"></i></a></td>
+                                            <td><a n:href="Sign:delete $webuser->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a></td>
+                                        </tr>
+                                    {/foreach}
+                                {else}
+                                    <tr>
+                                        <td>{$loggedUser->lastname}</td>
+                                        <td>{$loggedUser->firstname}</td>
+                                        <td>{$loggedUser->email}</td>
+                                        <td>{$loggedUser->role}</td>
+                                        <td>{$loggedUser->active}</td>
+                                        <td><a n:href="Sign:edit $loggedUser->id" class="btn btn-info"><i class="ion-edit"></i></a></td>
+                                    </tr>
+                                {/if}
+                            {/if}
+                        {/if}
+                    </tbody>
+                    <tfooter>
+                        <tr>
+                            <td colspan="6">
+                                {if $user->isLoggedIn() && $user->isInRole('Admin')}
+                                    <center><a n:href="Sign:up" class="btn btn-primary">Nový uživatel</a></center>
+                                {/if}
+                            </td>
+                        </tr>
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

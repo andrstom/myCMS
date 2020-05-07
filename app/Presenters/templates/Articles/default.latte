@@ -1,0 +1,68 @@
+{block content}
+<!-- News & Actions -->
+<section id="news">
+    <div class="container">
+        <header class="section-header">
+            <h3>Správa aktualit</h3>
+            <hr>
+            <p><a n:href="Homepage:default" class="btn btn-outline-success">Domů</a></p>
+            {if $user->isLoggedIn()}
+                {if $user->identity->role == 'Admin'}
+                    <p><a n:href="Articles:add" class="btn btn-warning col-md-12">Přidat</a></p>
+                {/if}
+            {/if}
+        </header>
+        <div class="row news-cols">
+            {foreach $articles as $article}
+
+                <div class="col-md-4">
+                    <div class="news-col">
+                        <div class="img">
+                            <center>
+                                {ifset $article->related('articles_gallery')->fetch()->gallery->url}
+                                    <img src={$basePath . $article->related('articles_gallery')->fetch()->gallery->url} alt={$article->related('articles_gallery')->fetch()->gallery->name} class="img-fluid">
+                                {else}
+                                    <img src="{$basePath . $organisation->logo}" width="40%" alt="logo" class="img-fluid">
+                                {/ifset}
+                            <center>
+                            <div class="icon"><i class="ion-pin"></i></div>
+                        </div>
+                        <h2 class="title">{$article->title}</h2>
+                        <p><center><small>Napsal: {$article->creator} ({$article->created_at|date:'d.m.Y'})</small></center></p>
+                        <p>{$article->content|truncate:200|noescape}</p>
+                        <p><center><a n:href="Articles:show $article->id" class="btn btn-outline-primary">více</a></center></p>
+                        <br>
+                        {if $user->isLoggedIn()}
+                            {if $user->isInRole('Admin')}
+                                <hr>
+                                <p class="text-center">
+                                    <a n:href="Articles:editArticle $article->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                    <a n:href="Articles:deleteArticle $article->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat tento příspěvek?\n\nSouvisející obrázky budou zachovány!');"><i class="ion-trash-a"></i></a>
+                                </p>
+                            {/if}
+                        {/if}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+        <div class="pagination text-center">
+            <b>
+            {if $page > 1}
+                <a n:href="default, 1">První stránka</a>
+                &nbsp;|&nbsp;
+                <a n:href="default, $page-1">Předchozí články</a>
+                &nbsp;|&nbsp;
+            {/if}
+
+            Stránka {$page} z {$lastPage}
+
+            {if $page < $lastPage}
+                &nbsp;|&nbsp;
+                <a n:href="default, $page+1">Další články</a>
+                &nbsp;|&nbsp;
+                <a n:href="default, $lastPage">Poslední stránka</a>
+            {/if}
+            </b>
+        </div>
+    </div>
+</section>

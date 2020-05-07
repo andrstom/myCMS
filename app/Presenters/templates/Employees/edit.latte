@@ -1,0 +1,46 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit parťáka <b>{$employee->lastname . ' ' . $employee->firstname}</b> ({$employee->position})</h2>
+            <hr>
+            <a n:href="Employees:default" class="btn btn-outline-success">Zpět na přehled parťáků</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>* povinná pole</p>
+                <div class="row about-cols">
+                    <div class="col-md-5">
+                        <div class="about-col">
+                            <div class="img">
+                                <img src="{$basePath . $employee->image}" alt=" " class="img-fluid">
+                            </div>
+                            <br>
+                            {form employeesForm}
+                                <ul class="errors" n:if="$form->hasErrors()">
+                                    <li n:foreach="$form->errors as $error">{$error}</li>
+                                </ul>
+                                <p>{label firstname /}{input firstname}</p>
+                                <p>{label lastname /}{input lastname}</p>
+                                <p>{label position /}{input position}</p>
+                                <p>{label email /}{input email}</p>
+                                <p>{label gsm /}{input gsm}</p>
+                                {foreach $form->getComponents() as $sid => $cntrl}
+                                    {if $cntrl instanceof Contributte\FormMultiplier\Multiplier}
+                                        {foreach $cntrl->getControls() as $key => $c}
+                                            <p>{label $c /}{input $c}</p>
+                                        {/foreach}
+                                    {/if}
+                                {/foreach}
+                                <hr>
+                                <p>{input send}</p>
+                            {/form}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</section>

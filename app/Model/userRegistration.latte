@@ -1,0 +1,94 @@
+{* NEWSLETTER TEPLATE *}
+{block content}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>MŠ Val - Registrace nového uživatele</title>
+        <style>
+        body {
+            background: #fff;
+            color: #666666;
+            font-family: "Open Sans", sans-serif;
+        }
+        
+        a:link, a:visited {
+            box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.9);
+            color: #3c260b;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            -webkit-border-radius: 10px 5px 10px 5px;
+            -moz-border-radius: 10px 5px 10px 5px;
+            border-radius: 10px 5px 10px 5px;
+            
+        }
+
+        a:hover, a:active {
+            box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.9);
+        }
+        
+        .newsletter {
+            text-align: center;
+            font-size: 0.8em;
+            padding: 20px 20px 20px 20px;
+            border: 1px solid #00647d;
+            box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.9);
+            -webkit-border-radius: 20px 20px 20px 20px;
+            -moz-border-radius: 20px 20px 20px 20px;
+            border-radius: 20px 20px 20px 20px;
+        }
+        .newsletter-image {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 300px;
+        }
+        
+        .header {
+            text-align: center;
+            margin: 20px auto;
+            padding-left: 10px;
+            
+         }
+        
+        .message {
+            padding: 20px 20px 20px 20px;
+            border: 1px solid #00647D;
+            -webkit-border-radius: 20px 20px 20px 20px;
+            -moz-border-radius: 20px 20px 20px 20px;
+            border-radius: 20px 20px 20px 20px;
+            box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.9);
+        }
+        
+        .more-info {
+            text-align: center;
+            font-style: italic;
+            background: #66d4ff;
+        }
+        
+        .unsubscribe {
+            text-align: center;
+            background: #ffa27f;
+        }
+        
+        .footer {
+            font-size: 0.9em;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 20px 20px 20px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="newsletter">
+            <img class="newsletter-image" src="./img/newsletter.png" />
+            <h1 class="header">Registrace byla úspěšná</b></h1>
+            <p><a n:href="Sign:userConfirmation $token" class="more-info">Aktivujte svůj účet kliknutím zde.</a></p>
+            <br>
+            <p><a href="mailto:reditel@msval.cz">Pokud zapomenete heslo, obraťe se na reditel@msval.cz</a></p>
+            <br>
+            <p class="footer">&copy; Mateřská škola Val, Val 14, 518 01 Dobruška, Česká republika | All rights reserved</p>
+        </div>
+    </body>
+</html>

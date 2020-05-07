@@ -1,0 +1,66 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+parameters:
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 10 days
+	autoStart: true
+
+extensions:
+	## Form multiplier
+	- Contributte\FormMultiplier\DI\MultiplierExtension 
+
+tracy:
+	bar:
+		- Nextras\MailPanel\MailPanel(%tempDir%/mail-panel-latte)
+
+services:
+	router: App\Router\RouterFactory::createRouter
+	nette.mailer:
+		class: Nette\Mail\IMailer
+		factory: Nextras\MailPanel\FileMailer(%tempDir%/mail-panel-mails)
+## MANAGERS ##
+	- App\Model\UserManager
+	- App\Model\ArticlesManager
+	- App\Model\OrganisationManager
+	- App\Model\EmployeesManager
+	- App\Model\ClientsManager
+	- App\Model\SponsorsManager
+	- App\Model\FileManager
+	- App\Model\EmailManager
+	- App\Model\DbHandler
+	- App\Model\PdfManager
+	- App\Model\ContentManager
+	- App\Model\GalleryManager
+	- App\Model\FoodManager
+
+## FORMS ##
+	- App\Forms\FormFactory
+	- App\Forms\SignInFormFactory
+	- App\Forms\SignUpFormFactory
+	- App\Forms\SignEditFormFactory
+	- App\Forms\SignEditPasswordFormFactory
+	- App\Forms\ArticlesFormFactory
+	- App\Forms\NewsletterFormFactory
+	- App\Forms\OrganisationFormFactory
+	- App\Forms\OrganisationDetailFormFactory
+	- App\Forms\OrganisationClientsFormFactory
+	- App\Forms\OrganisationSponsorsFormFactory
+	- App\Forms\EmployeesFormFactory
+	- App\Forms\SectionFormFactory
+	- App\Forms\SectionDetailFormFactory
+	- App\Forms\GalleryFormFactory
+	- App\Forms\GalleryEditFormFactory
+	- App\Forms\GalleryAlbumFormFactory
+	- App\Forms\AlergenFormFactory
+	- App\Forms\FoodFormFactory
+	- App\Forms\FoodEditFormFactory

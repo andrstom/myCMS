@@ -1,0 +1,44 @@
+{block content}
+<section id="portfolio">
+    <div class="container">
+        <header class="section-header">
+            <h2 class="section-title">Přidat kategorii fotografií</h2>
+        </header>
+        <hr>
+        <a n:href="Gallery:default" class="btn btn-outline-success">Zpět</a>
+        <div class="row">
+            <div class="col-lg-4">
+                {include bootstrap-form galleryAlbumForm}
+                <hr>
+                <table class="table table-responsive-md table-light">
+                    <thead>
+                        <tr>
+                            <th>Název</th>
+                            <th>Upravit</th>
+                            <th>Odstranit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {if !isset($imageAlbums->fetch()->name)}
+                            <tr>
+                                <td colspan="3"><center>Žádná kategorie.</center></td>
+                            </tr>
+                        {else}
+                            {foreach $imageAlbums as $imageAlbum}
+                                <tr>
+                                    <td>{$imageAlbum->name}</td>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <td><a n:href="Gallery:editAlbum $imageAlbum->id" class="btn btn-primary"><i class="ion-edit"></i></a></td>
+                                            <td>{if $imageAlbum->id > 1}<a n:href="Gallery:deleteAlbum $imageAlbum->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>{/if}</td>
+                                        {/if}
+                                    {/if}
+                                </tr>
+                            {/foreach}
+                        {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

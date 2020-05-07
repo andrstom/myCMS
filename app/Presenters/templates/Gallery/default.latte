@@ -1,0 +1,61 @@
+{block content}
+<!--==========================
+  Portfolio Section
+============================-->
+<section id="portfolio">
+    <div class="container">
+        <header class="section-header">
+            <h3 class="section-title">Fotogalerie</h3>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="portfolio-flters">
+                    <li data-filter="*" class="filter-active">Vše</li>
+                    {foreach $imageAlbums as $imageAlbum}
+                        <li data-filter=".{$imageAlbum->short_name}">{$imageAlbum->name}</li>
+                    {/foreach}
+                    {if $user->isLoggedIn()} 
+                        {if $user->isInRole('Admin')}
+                            <a n:href="Gallery:addAlbum" class="btn btn-warning" title="Přidat/Upravit kategorii fotografií/obrázků"><i class="ion-plus"></i></a>
+                        {/if}
+                    {/if}
+                </ul>
+            </div>
+        </div>
+        {if $user->isLoggedIn()}
+            {if $user->isInRole('Admin')}
+                <p><a n:href="Gallery:add" class="btn btn-warning col-lg-12" title="Přidat fotografie nebo obrázky">Přidat obrázky</a></p>
+            {/if}
+        {/if}
+        <div class="row portfolio-container">
+            {foreach $images as $image}
+                <div class="col-lg-2 col-md-2 portfolio-item {$image->ref('gallery_album','album_id')->short_name} wow fadeInUp">
+                    <div class="portfolio-wrap">
+                        <figure>
+                            <a href="{$basePath . $image->url}" data-lightbox="portfolio" title="{$image->description}">
+                                <img src="{$basePath . $image->url}" class="img-fluid" alt="">
+                            </a>
+                            {if $user->isLoggedIn()}
+                                {if $user->isInRole('Admin')}
+                                    <center>
+                                        <a n:href="Gallery:editImage $image->id" class="btn btn-outline-primary" title="Upravit"><i class="ion-edit"></i></a>
+                                        <a n:href="Gallery:deleteImage $image->id" class="btn btn-outline-danger" title="Smazat"  onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                    </center>
+                                {/if}
+                            {/if}
+                        </figure>
+                        <!--<div class="portfolio-info">
+                            <small>{$image->ref('gallery_album','album_id')->name}</small>
+                            <p>{$image->description}</p>
+                        </div>-->
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+
+    </div>
+</section>
+<!-- #portfolio -->

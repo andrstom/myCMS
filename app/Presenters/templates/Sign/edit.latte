@@ -1,0 +1,30 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Upravit <b>{$webuser->firstname .' '. $webuser->lastname}</b></h2>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="row about-cols">
+            <div class="col-md-4">
+
+                {include bootstrap-form signEditForm}
+                
+            </div>
+            <div class="col-md-4">
+
+                {include bootstrap-form signEditPasswordForm}
+                
+            </div>
+            {if $user->isLoggedIn()}
+                {if $user->isInRole('Admin')}
+                    <div class="col-md-4">
+                        <a n:href="Sign:resetPassword $webuser->id" class="btn btn-info">Nastavit zapomenuté heslo na "123psw321"</a>
+                    </div>
+                {/if}
+            {/if}
+        </div>
+    </div>
+</section>

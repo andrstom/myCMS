@@ -1,0 +1,19 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block="title">Přihlásit</h2>
+            <a n:href="up">Nemáte registraci? Pokračujte tudy.</a>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="row about-cols">
+            <div class="col-md-6">
+
+                {include bootstrap-form signInForm}
+                
+            </div>
+        </div>
+    </div>
+</section>

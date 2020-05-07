@@ -1,0 +1,399 @@
+{block content}
+<div class="container">
+    <div class="row">
+        {foreach $sectionsAbout as $section}
+            <section id="{$section->section_type}" class="col-sm-{$section->section_width} col-md-{$section->section_width} col-lg-{$section->section_width}" >
+                <div class="container">
+                    <header class="section-header">
+                        <center><img src="{$basePath . $section->section_image}" alt=" " class="img-fluid"></center>
+                        <h3>{$section->section_title}</h3>
+                    </header>
+                    <div class="text-justify">
+                        {$section->section_content|noescape}
+                    </div>
+                    <br>
+                    <div class="row {$section->section_type}-cols">
+
+                        {foreach $section->related('sections_details') as $detail}
+                            <div class="col-sm-{$section->section_columns} col-md-{$section->section_columns} col-lg-{$section->section_columns} wow fadeInUp">
+                                <div class="{$section->section_type}-col">
+                                    <div class="img">
+                                        <img src="{$basePath . $detail->detail_image}" alt=" " class="img-fluid">
+                                        <div class="icon"><i class="ion-bug"></i></div>
+                                    </div>
+                                    {if $detail->detail_title}<h2>{$detail->detail_title}</h2>{/if}
+                                    {if $detail->detail_content}{$detail->detail_content|noescape}{/if}
+                                    <br>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <hr>
+                                            <p class="text-center">
+                                                <a n:href="Content:editDetail $section->id, $detail->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                                <a n:href="Content:deleteDetail $section->id, $detail->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                            </p>
+                                        {/if}
+                                    {/if}
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                    {if $user->isLoggedIn()}
+                        {if $user->isInRole('Admin')}
+                            <hr>
+                            <p class="text-center">
+                                <a n:href="Content:edit $section->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                <a n:href="Content:delete $section->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                            </p>
+                        {/if}
+                    {/if}
+                </div>
+            </section>
+        {/foreach}
+    </div>
+</div>
+
+
+<!-- News & Actions -->
+<section id="news">
+    <div class="container">
+        <header class="section-header wow fadeInUp">
+            <h3>Aktuality a připravované akce</h3>
+            <p>Nejnovější zprávy a aktuality na jednom místě...</p>
+            <center>
+                <div class="col-lg-6">
+                    {form newsletterForm}
+                        <ul class="errors" n:if="$form->hasErrors()">
+                            <li n:foreach="$form->errors as $error">{$error}</li>
+                        </ul>
+                        <div class="input-single">
+                            <div class="input-group">
+                                {input email}<br>
+                                <span class="input-group-btn">{input send}</span>
+                            </div>
+                            <small>
+                                <p>Váš email bude sloužit výhradně pro zasílání novinek z našeho webu.<br>
+                                (Pozn. zkontrolujte "spam" a popř. označte zprávu, že není spam!)</p>
+                            </small>
+                        </div>
+                    {/form}
+                </div>
+            </center>
+            <hr>
+            {if $user->isLoggedIn()}
+                {if $user->identity->role == 'Admin'}
+                    <p><a n:href="Articles:add" class="btn btn-warning col-md-12">Přidat</a></p>
+                {/if}
+            {/if}
+        </header>
+        <div class="row news-cols">
+            {foreach $articles as $article}
+
+                <div class="col-md-4">
+                    <div class="news-col">
+                        <div class="img">
+                            {ifset $article->related('articles_gallery')->fetch()->gallery->url}
+                                <center><img src={$basePath . $article->related('articles_gallery')->fetch()->gallery->url} alt={$article->related('articles_gallery')->fetch()->gallery->name} class="img-fluid"></center>
+                            {else}
+                                <center><img src="{$basePath . $organisation->logo}" width="40%" alt="logo" class="img-fluid"></center>
+                            {/ifset}
+                            <div class="icon"><i class="ion-pin"></i></div>
+                        </div>
+                        <h2 class="title">{$article->title}</h2>
+                        <p><center><small>Napsal: {$article->creator} ({$article->created_at|date:'d.m.Y'})</small></center></p>
+                        <p>{$article->content|truncate:200|noescape}</p>
+                        <p><center><a n:href="Articles:show $article->id" class="btn btn-outline-primary">více</a></center></p>
+                        <br>
+                        {if $user->isLoggedIn()}
+                            {if $user->isInRole('Admin')}
+                                <hr>
+                                <p class="text-center">
+                                    <a n:href="Articles:editArticle $article->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                    <a n:href="Articles:deleteArticle $article->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat tento příspěvek?\n\nSouvisející obrázky budou zachovány!');"><i class="ion-trash-a"></i></a>
+                                </p>
+                            {/if}
+                        {/if}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+        <div class="pagination text-center">
+            <b>
+            {if $page > 1}
+                <a n:href="default, 1">První stránka</a>
+                &nbsp;|&nbsp;
+                <a n:href="default, $page-1">Předchozí články</a>
+                &nbsp;|&nbsp;
+            {/if}
+
+            Stránka {$page} z {$lastPage}
+
+            {if $page < $lastPage}
+                &nbsp;|&nbsp;
+                <a n:href="default, $page+1">Další články</a>
+                &nbsp;|&nbsp;
+                <a n:href="default, $lastPage">Poslední stránka</a>
+            {/if}
+            </b>
+        </div>
+    </div>
+</section>
+
+<!--=================
+Univ section
+==================-->
+<div class="container">
+    <div class="row">
+        {foreach $sectionsUniv as $section}
+            <section id="{$section->section_type}" class="col-sm-{$section->section_width} col-md-{$section->section_width} col-lg-{$section->section_width}" >
+                <div class="container">
+                    <header class="section-header">
+                        <center>
+                            <img src="{$basePath . $section->section_image}" alt=" " class="img img-fluid">
+                        </center>
+                        <br>
+                        <h3>{$section->section_title}</h3>
+                    </header>
+                    <div class="text-justify">
+                        {$section->section_content|noescape}
+                    </div>
+                    <br>
+                    <div class="row {$section->section_type}-cols">
+
+                        {foreach $section->related('sections_details') as $detail}
+                            <div class="col-sm-{$section->section_columns} col-md-{$section->section_columns} col-lg-{$section->section_columns} wow fadeInUp">
+                                <div class="{$section->section_type}-col">
+                                    <div class="img">
+                                        <center>
+                                            <img src="{$basePath . $detail->detail_image}" alt=" " class="img-fluid">
+                                        </center>
+                                    </div>
+                                    <h2>{$detail->detail_title}</h2>
+                                    <p>{$detail->detail_content|noescape}</p>
+                                    {if $user->isLoggedIn()}
+                                        {if $user->isInRole('Admin')}
+                                            <hr>
+                                            <p class="text-center">
+                                                <a n:href="Content:editDetail $section->id, $detail->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                                <a n:href="Content:deleteDetail $section->id, $detail->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                            </p>
+                                        {/if}
+                                    {/if}
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                    {if $user->isLoggedIn()}
+                        {if $user->isInRole('Admin')}
+                            <hr>
+                            <p class="text-center">
+                                <a n:href="Content:edit $section->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                <a n:href="Content:delete $section->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                            </p>
+                        {/if}
+                    {/if}
+                </div>
+            </section>
+        {/foreach}
+    </div>
+</div>
+<!--==========================
+Team Section
+============================-->
+<section id="team">
+    <div class="container">
+        <div class="section-header wow fadeInUp">
+            <h3>Náš tým</h3>
+        </div>
+        <div class="row">
+            {foreach $organisation->related('organisation_employees') as $employee}
+                <div class="col-lg-3 col-md-6 wow fadeInUp">
+                    <div class="member">
+                        <img src="{$basePath . $employee->image}" alt="{$employee->image}" class="img-fluid">
+                        <div class="member-info">
+                            <div class="member-info-content">
+                                <h4>{$employee->firstname . ' ' . $employee->lastname}</h4>
+                                <span>{$employee->position}</span>
+                                <span>{$employee->email}</span>
+                                <span>{$employee->gsm}</span>
+                                {if $user->isLoggedIn()} 
+                                    {if $user->isInRole('Admin')}
+                                        <br>
+                                        <a n:href="Employees:edit $organisation->id, $employee->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                                        <a n:href="Employees:delete $employee->id" class="btn btn-danger" title="Smazat" onclick="return confirm('Opravdu smazat?');"><i class="ion-trash-a"></i></a>
+                                    {/if}
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+    </div>
+</section>
+        
+<!--==========================
+  Portfolio Section
+============================-->
+<section id="portfolio">
+    <div class="container">
+        <header class="section-header">
+            <h3 class="section-title">Fotogalerie</h3>
+        </header>
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="portfolio-flters">
+                    <li data-filter="*" class="filter-active">Vše</li>
+                    {foreach $imageAlbums as $imageAlbum}
+                        <li data-filter=".{$imageAlbum->short_name}">{$imageAlbum->name}</li>
+                    {/foreach}
+                    {if $user->isLoggedIn()} 
+                        {if $user->isInRole('Admin')}
+                            <a n:href="Gallery:addAlbum" class="btn btn-warning" title="Přidat/Upravit kategorii fotografií/obrázků"><i class="ion-plus"></i></a>
+                        {/if}
+                    {/if}
+                </ul>
+            </div>
+        </div>
+        {if $user->isLoggedIn()}
+            {if $user->isInRole('Admin')}
+                <p><a n:href="Gallery:add" class="btn btn-warning col-lg-12" title="Přidat fotografie nebo obrázky">Přidat obrázky</a></p>
+            {/if}
+        {/if}
+        <div class="row portfolio-container">
+            {foreach $images as $image}
+                <div class="col-lg-2 col-md-2 portfolio-item {$image->ref('gallery_album','album_id')->short_name} wow fadeInUp">
+                    <div class="portfolio-wrap">
+                        <figure>
+                            <img src="{$basePath . $image->url}" class="img-fluid" alt="">
+                            <a href="{$basePath . $image->url}" class="link-preview" data-lightbox="portfolio" title="{$image->description}"><i class="ion ion-eye"></i></a>
+                            {if $user->isLoggedIn()}
+                                {if $user->isInRole('Admin')}
+                                    <a n:href="Gallery:editImage $image->id" class="link-edit" title="Upravit"><i class="ion-edit"></i></a>
+                                    <a n:href="Gallery:deleteImage $image->id" class="link-delete" title="Smazat"><i class="ion-trash-a"></i></a>
+                                {/if}
+                            {/if}
+                        </figure>
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+
+    </div>
+</section>
+<!-- #portfolio -->
+
+<!--  Sponzors Section-->
+{if $organisation->sponsors == "ANO"}
+    <section id="clients" class="wow fadeInUp">
+        <div class="container">
+
+            <header class="section-header">
+                <h3>Děkujeme za podporu</h3>
+            </header>
+
+            <div class="owl-carousel clients-carousel">
+                {foreach $sponsors as $sponsor}
+                    <a href="{$sponsor->link}" ><img src=".{$sponsor->image_url}" alt=""></a>
+                {/foreach}
+            </div>
+
+            {if $user->isLoggedIn()}
+                {if $user->isInRole('Admin')}
+                    <div class="text-center">
+                        <a n:href="Organisation:edit $organisation->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                    </div>
+                {/if}
+            {/if}
+
+        </div>
+    </section>
+{/if}
+<!-- #Sponzors -->
+
+<!--  Clients Section-->
+{if $organisation->clients == "ANO"}
+    <section id="clients" class="wow fadeInUp">
+        <div class="container">
+
+            <header class="section-header">
+                <h3>Naši klienti</h3>
+            </header>
+
+            <div class="owl-carousel clients-carousel">
+                {foreach $clients as $client}
+                    <a href="{$client->link}"><img src=".{$client->image_url}" alt=""></a>
+                {/foreach}
+            </div>
+            {if $user->isLoggedIn()}
+                {if $user->isInRole('Admin')}
+                    <div class="text-center">
+                        <a n:href="Organisation:edit $organisation->id" class="btn btn-info" title="Upravit"><i class="ion-edit"></i></a>
+                    </div>
+                {/if}
+            {/if}
+        </div>
+    </section>
+{/if}
+<!-- #Clients -->
+
+<!--==========================
+  Contact Section
+============================-->
+<section id="contact" class="section-bg wow fadeInUp">
+    <div class="container">
+        <div class="section-header">
+            <h3>Kontakt</h3>
+        </div>
+        <div class="row contact-info">
+            <div class="col-md-3">
+                <div class="contact-address">
+                    <h3>Adresa</h3>
+                    <i class="ion-ios-location-outline"></i>
+                    <address>
+                        <p>{$organisation->street}</p>
+                        <p>{$organisation->city}</p>
+                        <p>{$organisation->postal}</p>
+
+                    </address>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="contact-phone">
+                    <h3>Telefon</h3>
+                    <i class="ion-ios-telephone-outline"></i>
+                    <p>{$organisation->phone}</p>
+                    <p>{$organisation->gsm}</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="contact-email">
+                    <h3>Email</h3>
+                    <i class="ion-ios-email-outline"></i>
+                    <p><a href={$organisation->email}>{$organisation->email}</a></p>
+                </div>
+            </div>
+                
+            <div class="col-md-3">
+                <div class="contact-phone">
+                    <h3>Facebook</h3><br>
+                    <a href="https://www.facebook.com/" class="facebook"><i class="fa fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2547.9338533177433!2d16.17925561546546!3d50.3118264794566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470e70c48cb8e0b3%3A0x178ee5a8fd6da6de!2sVal%2014%2C%20518%2001%20Val!5e0!3m2!1sen!2scz!4v1585807571705!5m2!1sen!2scz" width="300" height="150" frameborder="0" style="box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.8);" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        </div>
+        <hr>
+        <div class="text-center">
+            <h3>Provozní doba:</h3>
+            <p>6:30 – 16:00</p>
+            <p>IČO: {$organisation->ico}
+                <br>
+                Bankovní spojení: {$organisation->account}
+            </p>
+        </div>
+    </div>
+</section>
+<!-- #contact -->

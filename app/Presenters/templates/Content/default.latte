@@ -1,0 +1,48 @@
+{block content}
+<section id="about">
+    <div class="container">
+        <header class="section-header">
+            <h2 n:block=title>Oddíly</h2>
+            <hr>
+            <a n:href="Homepage:default" class="btn btn-outline-success">Domů</a>
+        </header>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <table width="100%" class="table">
+                    <thead>
+                        <tr>
+                            <th>Pořadí</th>
+                            <th>Typ</th>
+                            <th>Nadpis</th>
+                            <th>Upravit</th>
+                            <th>Odstranit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {if !isset($sections->fetch()->section_title)}
+                            <tr>
+                                <td colspan="5"><center>žádný oddíl</center></td>
+                            </tr>
+                        {else}
+                            {foreach $sections as $section}
+                                <tr>
+                                    <td>{$section->section_priority}</td>
+                                    <td>{$section->section_type}</td>
+                                    <td>{$section->section_title}</td>
+                                    {if $user->isInRole('Admin')}
+                                        <td><a n:href="Content:edit $section->id" class="btn btn-info"><i class="ion-edit"></i></a></td>
+                                        <td><a n:href="Content:delete $section->id" class="btn btn-danger" onclick="return confirm('Opravdu smazat?\n\nSoučasně bude odstraněno i logo a další související detaily!');"><i class="ion-trash-a"></i></a></td>
+                                    {/if}
+                                </tr>
+                            {/foreach}
+                        {/if}
+                    </tbody>
+                    <tfooter>
+                        <tr><td colspan="7"><center><a n:href="Content:add" class="btn btn-primary">Přidat oddíl</a></center></td></tr>
+                    </tfooter>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
