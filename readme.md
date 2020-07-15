@@ -1,4 +1,4 @@
-cleverCMS
+myCMS
 =========
 
 Jednoduchý redakční systém pro webovou prezenatci. Kladen velký důraz na jednoduché a intuitivní vkládání obsahu.
